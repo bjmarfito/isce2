@@ -28,8 +28,6 @@
 # Author: David Bekaert
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-
-
 import os
 import sys
 import argparse
@@ -102,3 +100,18 @@ if __name__ == '__main__':
 
     # Generating the ISCE xml and vrt of this coarse DEM
     gdal2isce_xml(coarse_dem_envi)
+    
+    #Code adapted from https://github.com/scottstanie/sardem/blob/master/sardem/utils.py to tag the downsampled DEM as WGS84 ellipsoid
+    ref = ET.Element("property", attrib={"name": "reference"})
+    val = ET.SubElement(ref, "value")
+    val.text = "WGS84"
+    doc = ET.SubElement(ref, "doc")
+    doc.text = "Geodetic datum"
+    ref_str = minidom.parseString(ET.tostring(ref)).toprettyxml(indent="    ")
+    ref = ET.fromstring(ref_str)
+    xml_file = coarse_dem_envi+'.xml'
+    tree = ET.parse(xml_file)
+    root = tree.getroot()
+    root.append(ref)
+    tree.write(xml_file)
+    os.system("fixImageXml.py -i {0} -b".format(coarse_dem_envi))
