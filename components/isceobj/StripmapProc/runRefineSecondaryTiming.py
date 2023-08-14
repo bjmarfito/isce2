@@ -38,7 +38,7 @@ def estimateOffsetField(reference, secondary, azoffset=0, rgoffset=0):
     objOffset.setDownGrossOffset(azoffset)
     objOffset.setWindowSizeWidth(128)
     objOffset.setWindowSizeHeight(128)
-    objOffset.setSearchWindowSizeWidth(40)
+    objOffset.setSearchWindowSizeWidth(80)
     objOffset.setSearchWindowSizeHeight(40)
     margin = 2*objOffset.searchWindowSizeWidth + objOffset.windowSizeWidth
 
