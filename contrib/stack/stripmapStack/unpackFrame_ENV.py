@@ -19,13 +19,17 @@ def cmdLineParse():
     parser = argparse.ArgumentParser(description='Unpack Envisat SLC data and store metadata in pickle file.')
     parser.add_argument('-i','--input', dest='h5dir', type=str,
             required=True, help='Input Envisat directory')
+    parser.add_argument('-b', '--orbdir', dest='orbdir', type=str,
+            required=True, help = 'Orbit directory')
+    parser.add_argument('-insdir', dest='insdir', type=str,
+            required=True, help = 'Instrument directory')
     parser.add_argument('-o', '--output', dest='slcdir', type=str,
             required=True, help='Output SLC directory')
 
     return parser.parse_args()
 
 
-def unpack(hdf5, slcname):
+def unpack(hdf5, slcname, orbitdir, insdir):
     '''
     Unpack HDF5 to binary SLC file.
     '''
@@ -38,8 +42,8 @@ def unpack(hdf5, slcname):
 
     obj = createSensor('ENVISAT_SLC')
     obj._imageFileName = fname
-    obj.orbitDir = '/Users/agram/orbit/VOR'
-    obj.instrumentDir = '/Users/agram/orbit/INS_DIR'
+    obj.orbitDir = orbitdir
+    obj.instrumentDir = insdir
     obj.output = os.path.join(slcname, date+'.slc')
 
     obj.extractImage()
@@ -92,4 +96,4 @@ if __name__ == '__main__':
     if inps.h5dir.endswith('/'):
         inps.h5dir = inps.h5dir[:-1]
 
-    unpack(inps.h5dir, inps.slcdir)
+    unpack(inps.h5dir, inps.slcdir, inps.orbdir, inps.insdir)
