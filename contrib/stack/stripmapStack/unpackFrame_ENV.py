@@ -51,11 +51,11 @@ def unpack(hdf5, slcname, orbitdir, insdir):
 
 
     ######Numpy polynomial manipulation
-    pc = obj._dopplerCoeffs[::-1]
+    pc = obj.dopplerRangeTime[:: - 1]
     
     inds = np.linspace(0, obj.frame.numberOfSamples-1, len(pc) + 1)+1
     rng = obj.frame.getStartingRange() + inds * obj.frame.instrument.getRangePixelSize()
-    dops = np.polyval(pc, 2*rng/Const.c-obj._dopplerTime)
+    dops = np.polyval(pc, 2*rng/Const.c-obj.rangeRefTime)
 
     print('Near range doppler: ', dops[0])
     print('Far range doppler: ', dops[-1])
