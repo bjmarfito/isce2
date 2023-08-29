@@ -51,7 +51,7 @@ def unpack(hdf5, slcname, orbitdir, insdir):
 
 
     ######Numpy polynomial manipulation
-    pc = obj.dopplerRangeTime[:: - 1]
+    pc = obj.dopplerRangeTime[::-1]
     
     inds = np.linspace(0, obj.frame.numberOfSamples-1, len(pc) + 1)+1
     rng = obj.frame.getStartingRange() + inds * obj.frame.instrument.getRangePixelSize()
