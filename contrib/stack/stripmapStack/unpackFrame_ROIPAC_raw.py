@@ -47,25 +47,26 @@ def unpack(rawname, hdrname, slcname):
     print(obj.output)
     obj.extractImage()
     obj.frame.getImage().renderHdr()
+    obj.extractDoppler()
 
 
     #####Estimate doppler
-    dop = DopIQ()
-    dop.configure()
+    ##dop = DopIQ()
+    ##dop.configure()
 
-    img = copy.deepcopy(obj.frame.getImage())
-    img.setAccessMode('READ')
+    ##img = copy.deepcopy(obj.frame.getImage())
+    ##img.setAccessMode('READ')
 
-    dop.wireInputPort('frame', object=obj.frame)
-    dop.wireInputPort('instrument', object=obj.frame.instrument)
-    dop.wireInputPort('image', object=img)
-    dop.calculateDoppler()
-    dop.fitDoppler()
-    fit = dop.quadratic
-    coef = [fit['a'], fit['b'], fit['c']]
+    ##dop.wireInputPort('frame', object=obj.frame)
+    ##dop.wireInputPort('instrument', object=obj.frame.instrument)
+    ##dop.wireInputPort('image', object=img)
+    ##dop.calculateDoppler()
+    ##dop.fitDoppler()
+    ##fit = dop.quadratic
+    ##coef = [fit['a'], fit['b'], fit['c']]
 
-    print(coef)
-    obj.frame._dopplerVsPixel = [x*obj.frame.PRF for x in coef]
+    ##print(coef)
+    ##obj.frame._dopplerVsPixel = [x*obj.frame.PRF for x in coef]
 
     pickName = os.path.join(slcname, 'raw')
     with shelve.open(pickName) as db:
