@@ -8,7 +8,7 @@ import glob
 from isceobj.Util import Poly1D
 from isceobj.Planet.AstronomicalHandbook import Const
 import os
-from mroipac.dopiq.DopIQ import DopIQ
+#from mroipac.dopiq.DopIQ import DopIQ
 import copy
 
 def cmdLineParse():
