@@ -38,7 +38,7 @@ def unpack(rawname, hdrname, slcname):
     date = os.path.basename(slcname)
     obj = createSensor('ROI_PAC')
     obj.configure()
-    obj._rawFile = rawname
+    obj._rawFile = os.path.abspath(rawname)
     obj._hdrFile = hdrname
     obj.output = os.path.join(slcname, date+'.raw')
 
