@@ -8,7 +8,7 @@ import glob
 from isceobj.Util import Poly1D
 from isceobj.Planet.AstronomicalHandbook import Const
 import os
-#from mroipac.dopiq.DopIQ import DopIQ
+from mroipac.dopiq.DopIQ import DopIQ
 import copy
 
 def cmdLineParse():
@@ -39,7 +39,7 @@ def unpack(rawname, hdrname, slcname):
     obj = createSensor('ROI_PAC')
     obj.configure()
     obj._rawFile = os.path.abspath(rawname)
-    obj._hdrFile = hdrname
+    obj._hdrFile = os.path.abspath(hdrname)
     obj.output = os.path.join(slcname, date+'.raw')
 
     print(obj._rawFile)
@@ -48,8 +48,7 @@ def unpack(rawname, hdrname, slcname):
     obj.extractImage()
     obj.frame.getImage().renderHdr()
     obj.extractDoppler()
-
-
+    ##print(obj.extractDoppler())
     #####Estimate doppler
     ##dop = DopIQ()
     ##dop.configure()
