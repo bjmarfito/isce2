@@ -944,8 +944,8 @@ def arImgDisp_u(I1, I2, xGrid, yGrid, ChipSizeX, ChipSizeY, SearchLimitX, Search
     SLy_max = np.max(SearchLimitY + np.abs(Dy0))
     Py = int(np.max(ChipSizeY)/2 + SLy_max + 2)
 
-    I1 = np.lib.pad(I1,((Py,Py),(Px,Px)),'constant')
-    I2 = np.lib.pad(I2,((Py,Py),(Px,Px)),'constant')
+    I1 = np.pad(I1,((Py,Py),(Px,Px)),'constant')
+    I2 = np.pad(I2,((Py,Py),(Px,Px)),'constant')
 
     # adjust center location by the padarray size and 0.5 is added because we need to extract the chip centered at X+1 with -chipsize/2:chipsize/2-1, which equivalently centers at X+0.5 (X is the original grid point location). So for even chipsize, always returns offset estimates at (X+0.5).
     xGrid += (Px + 0.5)
@@ -1003,16 +1003,16 @@ def arImgDisp_u(I1, I2, xGrid, yGrid, ChipSizeX, ChipSizeY, SearchLimitX, Search
         #   Preparation for parallel
         in_shape = xGrid.shape
         I_shape = I1.shape
-        shape_prod = np.asscalar(np.prod(in_shape))
+        shape_prod = np.prod(in_shape).item()
         
         #        import pdb
         #        pdb.set_trace()
-        XI1 = mp.RawArray('b', np.asscalar(np.prod(I_shape)))
+        XI1 = mp.RawArray('b', np.prod(I_shape).item())
         XI1_np = np.frombuffer(XI1,dtype=np.uint8).reshape(I_shape)
         np.copyto(XI1_np,I1)
         del I1
         
-        XI2 = mp.RawArray('b', np.asscalar(np.prod(I_shape)))
+        XI2 = mp.RawArray('b', np.prod(I_shape).item())
         XI2_np = np.frombuffer(XI2,dtype=np.uint8).reshape(I_shape)
         np.copyto(XI2_np,I2)
         del I2
@@ -1192,8 +1192,8 @@ def arImgDisp_s(I1, I2, xGrid, yGrid, ChipSizeX, ChipSizeY, SearchLimitX, Search
     SLy_max = np.max(SearchLimitY + np.abs(Dy0))
     Py = int(np.max(ChipSizeY)/2 + SLy_max + 2)
     
-    I1 = np.lib.pad(I1,((Py,Py),(Px,Px)),'constant')
-    I2 = np.lib.pad(I2,((Py,Py),(Px,Px)),'constant')
+    I1 = np.pad(I1,((Py,Py),(Px,Px)),'constant')
+    I2 = np.pad(I2,((Py,Py),(Px,Px)),'constant')
     
     # adjust center location by the padarray size and 0.5 is added because we need to extract the chip centered at X+1 with -chipsize/2:chipsize/2-1, which equivalently centers at X+0.5 (X is the original grid point location). So for even chipsize, always returns offset estimates at (X+0.5).
     xGrid += (Px + 0.5)
@@ -1251,16 +1251,16 @@ def arImgDisp_s(I1, I2, xGrid, yGrid, ChipSizeX, ChipSizeY, SearchLimitX, Search
         #   Preparation for parallel
         in_shape = xGrid.shape
         I_shape = I1.shape
-        shape_prod = np.asscalar(np.prod(in_shape))
+        shape_prod = np.prod(in_shape).item()
         
         #        import pdb
         #        pdb.set_trace()
-        XI1 = mp.RawArray('f', np.asscalar(np.prod(I_shape)))
+        XI1 = mp.RawArray('f', np.prod(I_shape).item())
         XI1_np = np.frombuffer(XI1,dtype=np.float32).reshape(I_shape)
         np.copyto(XI1_np,I1)
         del I1
         
-        XI2 = mp.RawArray('f', np.asscalar(np.prod(I_shape)))
+        XI2 = mp.RawArray('f', np.prod(I_shape).item())
         XI2_np = np.frombuffer(XI2,dtype=np.float32).reshape(I_shape)
         np.copyto(XI2_np,I2)
         del I2
@@ -1369,14 +1369,14 @@ def colfilt(A, kernelSize, option, chunkSize=4):
             endInds = (ii+1)*chunkInds
         
         if (ii == 0)&(ii == chunkSize-1):
-            A1 = np.lib.pad(A[:,startInds:endInds],((int((kernelSize[0]-1)/2),int((kernelSize[0]-1)/2)),(int((kernelSize[1]-1)/2),int((kernelSize[1]-1)/2))),mode='constant',constant_values=np.nan)
+            A1 = np.pad(A[:,startInds:endInds],((int((kernelSize[0]-1)/2),int((kernelSize[0]-1)/2)),(int((kernelSize[1]-1)/2),int((kernelSize[1]-1)/2))),mode='constant',constant_values=np.nan)
         else:
             if ii == 0:
-                A1 = np.lib.pad(A[:,startInds:np.min((endInds+int((kernelSize[1]-1)/2),A.shape[1]-1))],((int((kernelSize[0]-1)/2),int((kernelSize[0]-1)/2)),(int((kernelSize[1]-1)/2),np.max((0,endInds+int((kernelSize[1]-1)/2)-A.shape[1]+1)))),mode='constant',constant_values=np.nan)
+                A1 = np.pad(A[:,startInds:np.min((endInds+int((kernelSize[1]-1)/2),A.shape[1]-1))],((int((kernelSize[0]-1)/2),int((kernelSize[0]-1)/2)),(int((kernelSize[1]-1)/2),np.max((0,endInds+int((kernelSize[1]-1)/2)-A.shape[1]+1)))),mode='constant',constant_values=np.nan)
             elif ii == chunkSize-1:
-                A1 = np.lib.pad(A[:,np.max((0,startInds-int((kernelSize[1]-1)/2))):endInds],((int((kernelSize[0]-1)/2),int((kernelSize[0]-1)/2)),(np.max((0,0-startInds+int((kernelSize[1]-1)/2))),int((kernelSize[1]-1)/2))),mode='constant',constant_values=np.nan)
+                A1 = np.pad(A[:,np.max((0,startInds-int((kernelSize[1]-1)/2))):endInds],((int((kernelSize[0]-1)/2),int((kernelSize[0]-1)/2)),(np.max((0,0-startInds+int((kernelSize[1]-1)/2))),int((kernelSize[1]-1)/2))),mode='constant',constant_values=np.nan)
             else:
-                A1 = np.lib.pad(A[:,np.max((0,startInds-int((kernelSize[1]-1)/2))):np.min((endInds+int((kernelSize[1]-1)/2),A.shape[1]-1))],((int((kernelSize[0]-1)/2),int((kernelSize[0]-1)/2)),(np.max((0,0-startInds+int((kernelSize[1]-1)/2))),np.max((0,endInds+int((kernelSize[1]-1)/2)-A.shape[1]+1)))),mode='constant',constant_values=np.nan)
+                A1 = np.pad(A[:,np.max((0,startInds-int((kernelSize[1]-1)/2))):np.min((endInds+int((kernelSize[1]-1)/2),A.shape[1]-1))],((int((kernelSize[0]-1)/2),int((kernelSize[0]-1)/2)),(np.max((0,0-startInds+int((kernelSize[1]-1)/2))),np.max((0,endInds+int((kernelSize[1]-1)/2)-A.shape[1]+1)))),mode='constant',constant_values=np.nan)
 
         B = viewW(A1, kernelSize).reshape(-1,kernelSize[0]*kernelSize[1]).T[:,::1]
     

@@ -142,17 +142,17 @@ def main(iargs=None):
     w = cor[point_index].reshape(m, 1)
 
     #convert to higher precision type before use
-    x=np.asfarray(x,np.float64)
-    y=np.asfarray(y,np.float64)
-    z=np.asfarray(z,np.float64)
-    w=np.asfarray(w,np.float64)
+    x=np.asarray(x, dtype=np.float64)
+    y=np.asarray(y, dtype=np.float64)
+    z=np.asarray(z, dtype=np.float64)
+    w=np.asarray(w, dtype=np.float64)
     coeff = fit_surface(x, y, z, w, order)
 
     rgindex = np.arange(width)
     azindex = np.arange(length).reshape(length, 1)
     #convert to higher precision type before use
-    rgindex=np.asfarray(rgindex,np.float64)
-    azindex=np.asfarray(azindex,np.float64)
+    rgindex=np.asarray(rgindex, dtype=np.float64)
+    azindex=np.asarray(azindex, dtype=np.float64)
     dion_fit = cal_surface(rgindex, azindex, coeff, order)
 
     #no fitting

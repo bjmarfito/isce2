@@ -39,6 +39,7 @@
 
 #include "stdio.h"
 #include "iostream"
+#define NPY_NO_DEPRECATED_API NPY_1_7_API_VERSION
 #include "numpy/arrayobject.h"
 #include "opencv2/imgproc/imgproc.hpp"
 #include "opencv2/imgproc/types_c.h"
@@ -76,6 +77,7 @@ PyModuleDef moduledef = {
 PyMODINIT_FUNC
 PyInit_autoriftcore()
 {
+    import_array();
     PyObject* module = PyModule_Create(&moduledef);
     if (!module)
     {
