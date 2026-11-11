@@ -2,6 +2,13 @@ cmake_minimum_required(VERSION 3.13...3.18)
 
 project(isce2 LANGUAGES C CXX Fortran)
 
+# GCC >= 15 defaults to C23, where old-style "f();" declarations mean f(void).
+# The legacy C sources rely on pre-C23 semantics, so pin to GNU C17.
+if(NOT DEFINED CMAKE_C_STANDARD)
+    set(CMAKE_C_STANDARD 17)
+    set(CMAKE_C_EXTENSIONS ON)
+endif()
+
 list(APPEND CMAKE_MODULE_PATH ${CMAKE_CURRENT_LIST_DIR}/.cmake)
 
 include(CheckLanguage)

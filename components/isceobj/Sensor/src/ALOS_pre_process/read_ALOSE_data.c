@@ -94,7 +94,7 @@ long read_ALOSE_data (FILE *imagefile, FILE *outfile, struct PRM *prm, long *byt
 	int	header_size, line_prefix_size;
 	double pri;
 
-        double 	get_clock_ALOSE();
+        double 	get_clock_ALOSE(struct sardata_info_ALOSE, double);
 
 	settable(12345);
 
