@@ -47,6 +47,14 @@ EXEC = False
 
 from iscesys.Traits import traits
 
+import re
+## NumPy >= 2 prints scalars as e.g. "np.float64(1.5)"; such strings may have
+## been written to XML files. Unwrap them to their plain value before parsing.
+_NUMPY_REPR = re.compile(r'\b(?:np|numpy)\.[A-Za-z_][A-Za-z0-9_]*\(\s*([^()]*?)\s*\)')
+
+def _strip_numpy_repr(a):
+    return _NUMPY_REPR.sub(r'\1', a)
+
 def containerize(a, ttyp, ctyp):
     """
     Convert a string version of a list, tuple, or comma-/space-separated
@@ -54,6 +62,8 @@ def containerize(a, ttyp, ctyp):
     """
     if not isinstance(a, str):
         return a
+
+    a = _strip_numpy_repr(a)
 
     #strip off the container indicator ('[', ']' for list, '(', ')' for tuple)
     if '[' in a:
@@ -89,6 +99,8 @@ def apply_type(value, dtype, ctype=None):
             ctype = traits[ctype]
         return containerize(value, dtype, ctype)
     else:
+        if isinstance(value, str):
+            value = _strip_numpy_repr(value)
         return dtype(value)
 
     print("dtype {} not in known traits".format(dtype))

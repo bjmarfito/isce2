@@ -34,6 +34,18 @@
 from __future__ import print_function
 import sys
 import xml.etree.ElementTree as ET
+
+
+def _toBuiltin(value):
+    # NumPy >= 2 prints scalars as e.g. "np.float64(1.5)", which ISCE cannot
+    # parse back from XML. Convert NumPy scalars/arrays to plain Python types.
+    if hasattr(value, 'tolist') and type(value).__module__ == 'numpy':
+        return value.tolist()
+    if isinstance(value, list):
+        return [_toBuiltin(v) for v in value]
+    if isinstance(value, tuple):
+        return tuple(_toBuiltin(v) for v in value)
+    return value
 ##
 #This class offers a set of methods that allow the reading and writing of xml files using the ElementTree python module.
 #It can be used to create xml file suitable to initialize object using the initializer  Component::InitFromXmlFile . In the  ISCE  package each object will be defined with the following elements
@@ -84,7 +96,7 @@ class XmlUtil:
         for key, val in dict.items():
             propSubEl = ET.SubElement(root,'property')
             ET.SubElement(propSubEl, 'name').text = key
-            ET.SubElement(propSubEl, 'value').text = str(val)
+            ET.SubElement(propSubEl, 'value').text = str(_toBuiltin(val))
 
 
         self.indent(root)

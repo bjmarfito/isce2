@@ -50,9 +50,24 @@ class XmlDumper:
             for ls in listIn:
                 self.getMaxLength(ls,maxL)
                 
+    @staticmethod
+    def _toBuiltin(value):
+        # NumPy >= 2 prints scalars as e.g. "np.float64(1.5)", which the XML
+        # reader cannot parse back. Convert NumPy scalars/arrays (also inside
+        # lists, tuples and dicts) to plain Python types before stringifying.
+        if hasattr(value, 'tolist') and type(value).__module__ == 'numpy':
+            return value.tolist()
+        if isinstance(value, list):
+            return [XmlDumper._toBuiltin(v) for v in value]
+        if isinstance(value, tuple):
+            return tuple(XmlDumper._toBuiltin(v) for v in value)
+        if isinstance(value, dict):
+            return {k: XmlDumper._toBuiltin(v) for k, v in value.items()}
+        return value
+
     def addProperty(self,parent,name,value,propMisc):
         child = ET.SubElement(parent,"property",name=name)
-        ET.SubElement(child, 'value').text = str(value)
+        ET.SubElement(child, 'value').text = str(self._toBuiltin(value))
         if not propMisc == None:
             for pkey in self._propertyKeys:
                 if pkey in propMisc:

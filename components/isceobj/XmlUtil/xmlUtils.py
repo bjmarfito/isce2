@@ -32,6 +32,18 @@
 
 
 import xml.etree.ElementTree as ET
+
+
+def _toBuiltin(value):
+    # NumPy >= 2 prints scalars as e.g. "np.float64(1.5)", which ISCE cannot
+    # parse back from XML. Convert NumPy scalars/arrays to plain Python types.
+    if hasattr(value, 'tolist') and type(value).__module__ == 'numpy':
+        return value.tolist()
+    if isinstance(value, list):
+        return [_toBuiltin(v) for v in value]
+    if isinstance(value, tuple):
+        return tuple(_toBuiltin(v) for v in value)
+    return value
 from collections import UserDict
 
 class OrderedDict(UserDict):
@@ -104,7 +116,7 @@ def dict_to_et(node,adict):
         else:
             subnode = ET.Element(key)
             node.append(subnode)
-            subnode.text = str(val)
+            subnode.text = str(_toBuiltin(val))
     return node
 
 def indent(elem, depth = None,last = None):

@@ -33,6 +33,18 @@
 from collections import OrderedDict
 import xml.etree.ElementTree as ET
 
+
+def _toBuiltin(value):
+    # NumPy >= 2 prints scalars as e.g. "np.float64(1.5)", which ISCE cannot
+    # parse back from XML. Convert NumPy scalars/arrays to plain Python types.
+    if hasattr(value, 'tolist') and type(value).__module__ == 'numpy':
+        return value.tolist()
+    if isinstance(value, list):
+        return [_toBuiltin(v) for v in value]
+    if isinstance(value, tuple):
+        return tuple(_toBuiltin(v) for v in value)
+    return value
+
 class Component(OrderedDict):
     '''
     Class for storing component information.
@@ -91,7 +103,7 @@ class Component(OrderedDict):
             elif (not isinstance(val, dict)) and (not isinstance(val, OrderedDict)):
                 propSubEl = ET.SubElement(root,'property')
                 propSubEl.attrib['name'] = key
-                ET.SubElement(propSubEl, 'value').text = str(val)
+                ET.SubElement(propSubEl, 'value').text = str(_toBuiltin(val))
 
         return root
 
