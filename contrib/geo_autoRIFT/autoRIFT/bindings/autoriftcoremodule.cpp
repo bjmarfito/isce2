@@ -42,7 +42,6 @@
 #define NPY_NO_DEPRECATED_API NPY_1_7_API_VERSION
 #include "numpy/arrayobject.h"
 #include "opencv2/imgproc/imgproc.hpp"
-#include "opencv2/imgproc/types_c.h"
 #include "opencv2/highgui/highgui.hpp"
 #include "opencv2/core/core.hpp"
 
@@ -142,7 +141,7 @@ PyObject* arPixDisp_u(PyObject *self, PyObject *args)
     cv::Mat result;
     result.create( result_rows, result_cols, CV_32FC1 );
     
-    cv::matchTemplate( my_imgR, my_imgC, result, CV_TM_CCOEFF_NORMED );
+    cv::matchTemplate( my_imgR, my_imgC, result, cv::TM_CCOEFF_NORMED );
     
     cv::Point maxLoc;
     cv::minMaxLoc(result, NULL, NULL, NULL, &maxLoc);
@@ -192,7 +191,7 @@ PyObject* arSubPixDisp_u(PyObject *self, PyObject *args)
     cv::Mat result;
     result.create( result_rows, result_cols, CV_32FC1 );
     
-    cv::matchTemplate( my_imgR, my_imgC, result, CV_TM_CCOEFF_NORMED );
+    cv::matchTemplate( my_imgR, my_imgC, result, cv::TM_CCOEFF_NORMED );
     
     cv::Point maxLoc;
     cv::minMaxLoc(result, NULL, NULL, NULL, &maxLoc);
@@ -274,7 +273,7 @@ PyObject* arPixDisp_s(PyObject *self, PyObject *args)
     cv::Mat result;
     result.create( result_rows, result_cols, CV_32FC1 );
     
-    cv::matchTemplate( my_imgR, my_imgC, result, CV_TM_CCORR_NORMED );
+    cv::matchTemplate( my_imgR, my_imgC, result, cv::TM_CCORR_NORMED );
     
     cv::Point maxLoc;
     cv::minMaxLoc(result, NULL, NULL, NULL, &maxLoc);
@@ -324,7 +323,7 @@ PyObject* arSubPixDisp_s(PyObject *self, PyObject *args)
     cv::Mat result;
     result.create( result_rows, result_cols, CV_32FC1 );
     
-    cv::matchTemplate( my_imgR, my_imgC, result, CV_TM_CCORR_NORMED );
+    cv::matchTemplate( my_imgR, my_imgC, result, cv::TM_CCORR_NORMED );
     
     cv::Point maxLoc;
     cv::minMaxLoc(result, NULL, NULL, NULL, &maxLoc);
